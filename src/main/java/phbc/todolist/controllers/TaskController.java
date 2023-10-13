@@ -4,14 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import phbc.todolist.models.TaskModel;
+import phbc.todolist.models.UserModel;
 import phbc.todolist.repositories.TaskRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,5 +33,12 @@ public class TaskController {
         }
         var task = taskRepository.save(taskModel);
         return ResponseEntity.status(HttpStatus.OK).body(task);
+    }
+
+    @GetMapping
+    public ResponseEntity getAll(HttpServletRequest request) {
+        var idUser = request.getAttribute("idUser");
+        var taskList = taskRepository.findByIdUser((UUID) idUser);
+        return ResponseEntity.status(HttpStatus.OK).body(taskList);
     }
 }
